@@ -6,13 +6,33 @@ app = Flask(__name__)
 def home():
     return render_template("home.html")
 
-@app.route("/sigin")
+@app.route("/elements")
+def elements():
+    return render_template("elements.html")
+
+@app.route("/imgtry")
+def imgtry():
+    return render_template("imgtry.html")
+
+@app.route("/index")
+def index():
+    return render_template("index.html")
+
+@app.route("/login")
 def login():
-    return render_template("sigin.html")
+    return render_template("login.html")
+
+@app.route("/sigup")
+def sigup():
+    return render_template("sigup.html")
 
 @app.route("/profile")
 def profile():
     return render_template("profile.html")
+
+@app.route("/sample")
+def sample():
+    return render_template("sample.html")
 
 
 if __name__ == "__main__":
