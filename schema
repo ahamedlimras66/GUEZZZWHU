@@ -1,0 +1,20 @@
+user:
+    id - int(PK)
+    username - char
+    password - char
+    gender - char
+    phone_no - char(10)
+    email - char
+    dob 
+
+link:
+    id - int(PK)
+    user_id - user.id
+    
+
+link_command:
+    id - int(PK)
+    link_id - link.id
+    commander_id - user.id
+    command - char
+
