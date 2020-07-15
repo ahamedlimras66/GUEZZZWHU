@@ -75,7 +75,7 @@ def profile():
     print(link)
     return render_template("profile.html", user=user, link=link)
 
-@app.route("create_link/<user_id>")
+@app.route("/create_link/<user_id>")
 @login_required
 def create_link(user_id):
     iteam = {}

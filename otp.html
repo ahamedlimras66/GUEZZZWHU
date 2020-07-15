@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
 <head>
-	{% import "bootstrap/wtf.html" as wtf %}
 	<!-- Mobile Specific Meta -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<!-- Favicon-->
-	<link rel="shortcut icon" href="static/fav.png">
+	<link rel="shortcut icon" href="img/fav.png">
 	<!-- Author Meta -->
 	<meta name="author" content="Colorlib">
 	<!-- Meta Description -->
@@ -21,18 +20,15 @@
 		<!--
 		CSS
 		============================================= -->
-		<link rel="stylesheet" href="static/css/linearicons.css">
-		<link rel="stylesheet" href="static/css/owl.carousel.css">
-		<link rel="stylesheet" href="static/css/font-awesome.min.css">
-		<link rel="stylesheet" href="static/css/nice-select.css">
-		<link rel="stylesheet" href="static/css/magnific-popup.css">
-		<link rel="stylesheet" href="static/css/bootstrap.css">
-		<link rel="stylesheet" href="static/css/main.css">
+		<link rel="stylesheet" href="css/linearicons.css">
+		<link rel="stylesheet" href="css/owl.carousel.css">
+		<link rel="stylesheet" href="css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/nice-select.css">
+		<link rel="stylesheet" href="css/magnific-popup.css">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/main.css">
 		<style>
-			.control-label {
-				display: none;
-			}
-
+		
 			.login-page {
 			  width: 360px;
 			  padding: 8% 0 0;
@@ -128,9 +124,50 @@
 				  
 				       
 			}
+		    input[type=number] {
+		             height: 65px;
+		             width: 65px;
+		             font-size: 25px;
+		             text-align: center;
+		             border: 1px solid #000000;
+		         }
+		         input[type=number]::-webkit-inner-spin-button,
+		         input[type=number]::-webkit-outer-spin-button {
+		           -webkit-appearance: none;
+		           margin: 0;
+		         }
+			
 			</style>
 		
-		
+	    <script>
+	         function getCodeBoxElement(index) {
+	           return document.getElementById('codeBox' + index);
+	         }
+	         function onKeyUpEvent(index, event) {
+	           const eventCode = event.which || event.keyCode;
+	           if (getCodeBoxElement(index).value.length === 1) {
+	             if (index !== 4) {
+	               getCodeBoxElement(index+ 1).focus();
+	             } else {
+	               getCodeBoxElement(index).blur();
+	               // Submit code
+	               console.log('submit code ');
+	             }
+	           }
+	           if (eventCode === 8 && index !== 1) {
+	             getCodeBoxElement(index - 1).focus();
+	           }
+	         }
+	         function onFocusEvent(index) {
+	           for (item = 1; item < index; item++) {
+	             const currentElement = getCodeBoxElement(item);
+	             if (!currentElement.value) {
+	                 currentElement.focus();
+	                 break;
+	             }
+	           }
+	         }
+	       </script>
 	</head>
 	<body>
 	<div class="oz-body-wrap">
@@ -139,10 +176,7 @@
 			<div class="container-fluid">
 				<div class="header-wrap">
 					<div class="header-top d-flex justify-content-between align-items-center">
-						<div class="logo">
-							<a href="/"><img src="logo.png" alt=""  width="250" height="120"></a>
-							
-						</div>
+						
 						
 						
 					</div>
@@ -155,65 +189,45 @@
 		
 		<section class="banner-area relative">
 			<div class="container">
-				<div class="row fullscreen align-items-center justify-content-center">
-					<div class="banner-left col-lg-6">
-						<div class="logo">
-							<a href="main.html"><img src="logo copy.png" alt=""  width="350" height="180"></a>
+				<div class="logo">
+					<a href="main.html"><img src="logo copy.png" alt=""  width="350" height="180"></a>
 					
-						</div>
+				</div>
+				<br>
+			
+					
+					
+								<br>
+				
+
+								<center>	<h2>Enter The OTP </h2>	   </center>
+				
+						<br>
+						<center><p><b>Check The Mail For OTP</b></p></center>
+							
+								<br>
+								</div>	
+		    <form>
+		           	   <center><input id="codeBox1" type="number" maxlength="1" onkeyup="onKeyUpEvent(1, event)" onfocus="onFocusEvent(1)"/>
+		           <input id="codeBox2" type="number" maxlength="1" onkeyup="onKeyUpEvent(2, event)" onfocus="onFocusEvent(2)"/>
+		           <input id="codeBox3" type="number" maxlength="1" onkeyup="onKeyUpEvent(3, event)" onfocus="onFocusEvent(3)"/>
+		           <input id="codeBox4" type="number" maxlength="1" onkeyup="onKeyUpEvent(4, event)" onfocus="onFocusEvent(4)"/>
+		       </form>
+		
+				<br>
+				<br>
+				<button type="button" class="genric-btn primary circle arrow">verify!</button>   </center>
+					<br>
+					<br>
+					
+					<br>
+						<br>
 						<br>
 							<br>
-								
-											<br>
-									
-											
-						<img class="d-flex mx-auto img-fluid" src="static/img/login.png" alt="">
-					</div>
-					<div class="col-lg-6">
-						<div class="story-content">
 							<br>
 								<br>
 								<br>
-									<br>
-									<br>
-										<br>
-							<br>
 								<br>
-								
-									<br>
-										<br>
-							
-											<div class="login-page">
-											  <div class="form">
-								
-												 <h2>Login Form</h2>
-				  								<br>
-  							
-											    <form class="login-form" action="/login", method="POST">
-													{{ form.hidden_tag() }}
-													{% if error is not none %}
-														<p style="color:red">{{ error }}</p>
-													{% endif %}
-												  {{ wtf.form_field(form.username,placeholder="username") }}
-							<br>
-												  {{ wtf.form_field(form.password, placeholder="password") }}
-												
-												<button>login</button>
-												
-												
-												
-										
-											      <p class="message">Not registered? <a href="/sigup">Create an account</a></p>
-											    </form>
-											  </div>
-											</div>
-											<script>
-											$('.message a').click(function(){
-											   $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
-											});
-											</script>
-						</div>
-					</div>
 				</div>
 			</div>
 			<br>
@@ -241,15 +255,15 @@
 		<!-- End Footer Area -->
 	</div>
 
-		<script src="static/js/vendor/jquery-2.2.4.min.js"></script>
+		<script src="js/vendor/jquery-2.2.4.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-		<script src="static/js/vendor/bootstrap.min.js"></script>
-		<script src="static/js/jquery.ajaxchimp.min.js"></script>
-		<script src="static/js/owl.carousel.min.js"></script>
-		<script src="static/js/jquery.nice-select.min.js"></script>
-		<script src="static/js/jquery.magnific-popup.min.js"></script>
-		<script src="static/js/jquery.counterup.min.js"></script>
-		<script src="static/js/waypoints.min.js"></script>
-		<script src="static/js/main.js"></script>
+		<script src="js/vendor/bootstrap.min.js"></script>
+		<script src="js/jquery.ajaxchimp.min.js"></script>
+		<script src="js/owl.carousel.min.js"></script>
+		<script src="js/jquery.nice-select.min.js"></script>
+		<script src="js/jquery.magnific-popup.min.js"></script>
+		<script src="js/jquery.counterup.min.js"></script>
+		<script src="js/waypoints.min.js"></script>
+		<script src="js/main.js"></script>
 	</body>
 </html>
