@@ -1,5 +1,6 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
+from werkzeug.security import check_password_hash, generate_password_hash
 from flask_bootstrap import Bootstrap
 from models.schema import *
 from models.form import *
@@ -18,24 +19,43 @@ def create_tables():
 def home():
     return render_template("home.html")
 
-@app.route("/login")
+@app.route("/login", methods=['POST', 'GET'])
 def login():
-    return render_template("login.html")
+    error = None
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                print("noice")
+                return redirect('/profile')
+            else:
+                error = "Invalid password"
+        else:
+            error = "user name not exits"
+    return render_template("login.html", form=form, error=error)
 
 @app.route("/sigup", methods=['POST', 'GET'])
 def sigup():
-
+    error = None
     form = SigupForm()
-    print(form.password.data, form.re_password.data, form.dob.data, form.email.data, form.username.data)
-    print(form.validate_on_submit())
+
     if form.validate_on_submit():
-        print(form.password.data, form.re_password.data)
-
-    return render_template("sigup.html", form=form)
-
-
-
-
+        if User.query.filter_by(username=form.username.data).first() == None:
+            new_user = User(username=form.username.data,
+                            password=generate_password_hash(form.password.data, method='sha256'),
+                            gender=dict(form.gender.choices).get(form.gender.data),
+                            phone_no=form.phone_no.data,
+                            email=form.email.data,
+                            dob=form.dob.data
+                            )
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect("/login")
+        else:
+            error = "user name exist"
+    return render_template("sigup.html", form=form, error=error)
 
 
 @app.route("/elements")
