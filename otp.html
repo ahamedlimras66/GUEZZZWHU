@@ -14,7 +14,7 @@
 	<!-- meta character set -->
 	<meta charset="UTF-8">
 	<!-- Site Title -->
-	<title>GUEZZZWHU</title>
+	<title>Wave</title>
 
 	<link href="https://fonts.googleapis.com/css?family=Poppins:100,300,500" rel="stylesheet">
 		<!--
@@ -119,10 +119,55 @@
 			       
 			}
 			
+			body {
+				  background: #76b852; /* fallback for old browsers */
+				  
+				       
+			}
+		    input[type=number] {
+		             height: 65px;
+		             width: 65px;
+		             font-size: 25px;
+		             text-align: center;
+		             border: 1px solid #000000;
+		         }
+		         input[type=number]::-webkit-inner-spin-button,
+		         input[type=number]::-webkit-outer-spin-button {
+		           -webkit-appearance: none;
+		           margin: 0;
+		         }
 			
 			</style>
 		
-		
+	    <script>
+	         function getCodeBoxElement(index) {
+	           return document.getElementById('codeBox' + index);
+	         }
+	         function onKeyUpEvent(index, event) {
+	           const eventCode = event.which || event.keyCode;
+	           if (getCodeBoxElement(index).value.length === 1) {
+	             if (index !== 4) {
+	               getCodeBoxElement(index+ 1).focus();
+	             } else {
+	               getCodeBoxElement(index).blur();
+	               // Submit code
+	               console.log('submit code ');
+	             }
+	           }
+	           if (eventCode === 8 && index !== 1) {
+	             getCodeBoxElement(index - 1).focus();
+	           }
+	         }
+	         function onFocusEvent(index) {
+	           for (item = 1; item < index; item++) {
+	             const currentElement = getCodeBoxElement(item);
+	             if (!currentElement.value) {
+	                 currentElement.focus();
+	                 break;
+	             }
+	           }
+	         }
+	       </script>
 	</head>
 	<body>
 	<div class="oz-body-wrap">
@@ -131,13 +176,8 @@
 			<div class="container-fluid">
 				<div class="header-wrap">
 					<div class="header-top d-flex justify-content-between align-items-center">
-						<div class="logo">
-							<a href="main.html"><img src="logo copy.png" alt=""  width="350" height="180"></a>
-							
-						</div>
-						<div class="main-menubar d-flex align-items-center">
-							<a href="login.html" class="genric-btn primary">Back</a>
-						</div>
+						
+						
 						
 					</div>
 				</div>
@@ -149,64 +189,43 @@
 		
 		<section class="banner-area relative">
 			<div class="container">
-				<div class="row fullscreen align-items-center justify-content-center">
-					<div class="banner-left col-lg-6">
+				<div class="logo">
+					<a href="main.html"><img src="logo copy.png" alt=""  width="350" height="180"></a>
+					
+				</div>
+				<br>
+			
+					
+					
+								<br>
+				
+
+								<center>	<h2>Enter The OTP </h2>	   </center>
+				
+						<br>
+							
+								<br>
+								</div>	
+		    <form>
+		           	   <center><input id="codeBox1" type="number" maxlength="1" onkeyup="onKeyUpEvent(1, event)" onfocus="onFocusEvent(1)"/>
+		           <input id="codeBox2" type="number" maxlength="1" onkeyup="onKeyUpEvent(2, event)" onfocus="onFocusEvent(2)"/>
+		           <input id="codeBox3" type="number" maxlength="1" onkeyup="onKeyUpEvent(3, event)" onfocus="onFocusEvent(3)"/>
+		           <input id="codeBox4" type="number" maxlength="1" onkeyup="onKeyUpEvent(4, event)" onfocus="onFocusEvent(4)"/>   </center>
+		       </form>
+		
+				<br>
+				<br>
+					<br>
+					<br>
+					
+					<br>
+						<br>
 						<br>
 							<br>
-								<br>
-								<br>
-									<br>
-									<br>
-										<br>
-										<br>
-											<br>
-									
-											
-						<img class="d-flex mx-auto img-fluid" src="img/crt.png" alt="">
-					</div>
-					<div class="col-lg-6">
-						<div class="story-content">
-							
 							<br>
 								<br>
 								<br>
-									<br>
-									<br>
-										<br>
-							<br>
 								<br>
-								
-									<br>
-										<br>
-							
-											<div class="login-page">
-											  <div class="form">
-								
-												 <h2>Create Account</h2>
-				  								<br>
-  							
-											    <form class="login-form">
-									
-											      <input type="text" placeholder="Username" />
-							<br>
-											      <input type="password" placeholder="Password" />
-												  <br>
-												   <input type="password" placeholder="Re-Password" />
-												    	   <input type="tel" id="phone" placeholder="Phone no" />
-												   	   <input type="email" placeholder="Email" />
-													    <input type="date" placeholder="Date of Brith" />
-											      <button>Create</button>
-											    
-											    </form>
-											  </div>
-											</div>
-											<script>
-											$('.message a').click(function(){
-											   $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
-											});
-											</script>
-						</div>
-					</div>
 				</div>
 			</div>
 			<br>
@@ -220,10 +239,6 @@
 							<br>
 								<br>
 								<br>
-								<br>
-								
-									<br>
-										<br>
 									<br>
 		</section>
 		
