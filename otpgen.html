@@ -124,9 +124,22 @@
 				  
 				       
 			}
+		    input[type=number] {
+		             height: 65px;
+		             width: 65px;
+		             font-size: 25px;
+		             text-align: center;
+		             border: 1px solid #000000;
+		         }
+		         input[type=number]::-webkit-inner-spin-button,
+		         input[type=number]::-webkit-outer-spin-button {
+		           -webkit-appearance: none;
+		           margin: 0;
+		         }
+			
 			</style>
-		
-		
+	
+	    
 	</head>
 	<body>
 	<div class="oz-body-wrap">
@@ -148,62 +161,43 @@
 		
 		<section class="banner-area relative">
 			<div class="container">
-				<div class="row fullscreen align-items-center justify-content-center">
-					<div class="banner-left col-lg-6">
-						<div class="logo">
-							<a href="main.html"><img src="logo copy.png" alt=""  width="350" height="180"></a>
+				<div class="logo">
+					<a href="main.html"><img src="logo copy.png" alt=""  width="350" height="180"></a>
 					
-						</div>
+				</div>
+				<br>
+			
+				<script> 
+  
+				// Function to generate OTP 
+				function generateOTP() { 
+          
+				    // Declare a digits variable  
+				    // which stores all digits 
+				    var digits = '0123456789'; 
+				    let OTP = ''; 
+				    for (let i = 0; i < 4; i++ ) { 
+				        OTP += digits[Math.floor(Math.random() * 10)]; 
+				    } 
+				    return OTP; 
+				} 
+  
+				document.write("OTP of 4 digits: ") 
+				document.write( generateOTP() ); 
+				</script>	
+					
+								<br>
+				
+
+					
+					<br>
+						<br>
 						<br>
 							<br>
-								
-											<br>
-									
-											
-						<img class="d-flex mx-auto img-fluid" src="img/login.png" alt="">
-					</div>
-					<div class="col-lg-6">
-						<div class="story-content">
 							<br>
 								<br>
 								<br>
-									<br>
-									<br>
-										<br>
-							<br>
 								<br>
-								
-									<br>
-										<br>
-							
-											<div class="login-page">
-											  <div class="form">
-								
-												 <h2>Login Form</h2>
-				  								<br>
-  							
-											    <form class="login-form">
-									
-											      <input type="text" placeholder="username" />
-							<br>
-											      <input type="password" placeholder="password" />
-												
-												<button>login</button>
-												
-												
-												
-										
-											      <p class="message">Not registered? <a href="create.html">Create an account</a></p>
-											    </form>
-											  </div>
-											</div>
-											<script>
-											$('.message a').click(function(){
-											   $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
-											});
-											</script>
-						</div>
-					</div>
 				</div>
 			</div>
 			<br>
