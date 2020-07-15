@@ -135,13 +135,13 @@
 				<div class="header-wrap">
 					<div class="header-top d-flex justify-content-between align-items-center">
 						<div class="logo">
-							<a href="index.html"><img src="logo.png" alt=""  width="250" height="120"></a>
+							<a href="/"><img src="logo.png" alt=""  width="250" height="120"></a>
 							
 						</div>
 						<div class="navbar">
 							
-						 <h5>Ahamedlimras</h5>
-						  <a href="login.html"><i class="fa fa-fw fa-user"></i> Logout</a>
+						 <h5>{{ user.username }}</h5>
+						  <a href="/logout"><i class="fa fa-fw fa-user"></i> Logout</a>
 						   
 							
 						  
@@ -188,8 +188,8 @@
 		
 
 
-				<h2><span class="sp-2">Ahamed </span>
-				 <span class="sp-1"> Limras</span></h2></center>
+				<h2><span class="sp-2">{{ user.username }}</span>
+				</h2></center>
 				 <br>
 				 <script>
 				 function myFunction() {
@@ -199,12 +199,23 @@
 				   document.execCommand("copy");
 				   alert("Copied the text: " + copyText.value);
 				 }
+
+				 function CreateLink() {
+					 fetch('/create_link/'+user.id).then(function(response){
+						 response.json().then(function(data){
+							 
+						 })
+					 })
+				 }
 				 </script>
 				 
-				 
-				 
-				 <input type="text" value="Hello World" id="myInput">
-				 <button onclick="myFunction()">Copy & Share</button>
+				
+				{% if link is not none %}
+					<input type="text" value=link.id id="myInput">
+					<button onclick="myFunction()">Copy & Share</button>
+				{% else %}
+					<button onclick="CreateLink()">Create Link</button>
+				{% endif %}
  				<br>
 						<br>
 								<br>

@@ -1,19 +1,28 @@
 import os
-from flask import Flask, render_template, redirect
-from werkzeug.security import check_password_hash, generate_password_hash
-from flask_bootstrap import Bootstrap
-from models.schema import *
 from models.form import *
+from models.schema import *
+from flask_bootstrap import Bootstrap
+from flask import Flask, render_template, redirect, jsonify
+from werkzeug.security import check_password_hash, generate_password_hash
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+
 
 app = Flask(__name__)
 Bootstrap(app)
 app.secret_key = 'my-secret-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+login_manager = LoginManager(app)
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 @app.before_first_request
 def create_tables():
     db.create_all()
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 @app.route("/")
 def home():
@@ -28,7 +37,7 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
             if check_password_hash(user.password, form.password.data):
-                print("noice")
+                login_user(user, remember=True)
                 return redirect('/profile')
             else:
                 error = "Invalid password"
@@ -58,6 +67,33 @@ def sigup():
     return render_template("sigup.html", form=form, error=error)
 
 
+@app.route("/profile")
+@login_required
+def profile():
+    user = User.query.filter_by(id=current_user.id).first()
+    link = Link.query.filter_by(user_id=current_user.id).first()
+    print(link)
+    return render_template("profile.html", user=user, link=link)
+
+@app.route("create_link/<user_id>")
+@login_required
+def create_link(user_id):
+    iteam = {}
+    iteam['id'] = user_id
+    return jsonify(iteam)
+
+@app.route("/link/<link_id>")
+@login_required
+def link(link_id):
+    return link_id
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
+
 @app.route("/elements")
 def elements():
     return render_template("elements.html")
@@ -70,9 +106,7 @@ def imgtry():
 def index():
     return render_template("index.html")
 
-@app.route("/profile")
-def profile():
-    return render_template("profile.html")
+
 
 @app.route("/sample")
 def sample():
