@@ -33,7 +33,7 @@ def login():
             else:
                 error = "Invalid password"
         else:
-            error = "user name not exits"
+            error = "username exist"
     return render_template("login.html", form=form, error=error)
 
 @app.route("/sigup", methods=['POST', 'GET'])
@@ -54,7 +54,7 @@ def sigup():
             db.session.commit()
             return redirect("/login")
         else:
-            error = "user name exist"
+            error = "username exist"
     return render_template("sigup.html", form=form, error=error)
 
 

@@ -140,7 +140,7 @@
 				<div class="header-wrap">
 					<div class="header-top d-flex justify-content-between align-items-center">
 						<div class="logo">
-							<a href="main.html"><img src="logo.png" alt=""  width="250" height="120"></a>
+							<a href="/"><img src="logo.png" alt=""  width="250" height="120"></a>
 							
 						</div>
 						
@@ -192,11 +192,11 @@
   							
 											    <form class="login-form" action="/login", method="POST">
 													{{ form.hidden_tag() }}
-													
-												  <!-- <input type="text" placeholder="username" /> -->
+													{% if error is not none %}
+														<p style="color:red">{{ error }}</p>
+													{% endif %}
 												  {{ wtf.form_field(form.username,placeholder="username") }}
 							<br>
-												  <!-- <input type="password" placeholder="password" /> -->
 												  {{ wtf.form_field(form.password, placeholder="password") }}
 												
 												<button>login</button>
