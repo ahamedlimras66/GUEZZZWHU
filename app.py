@@ -1,68 +1,95 @@
-import os
-import json
+import os, json
+from random import randint
+
 from models.form import *
 from models.schema import *
-from random import randint
+
 from flask_mail import Mail,Message
+
 from flask_bootstrap import Bootstrap
+
 from flask import Flask, render_template, redirect, jsonify, request
+
 from werkzeug.security import check_password_hash, generate_password_hash
+
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-
+# config file
 with open('config.json') as f:
   info = json.load(f)
 
+# main app
 app = Flask(__name__)
+
+# WTF-form bootstrap
 Bootstrap(app)
+
+# database config
 app.secret_key = 'my-secret-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# mail server config
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = info['email']
 app.config['MAIL_PASSWORD'] = info['password']
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
-
 mail = Mail(app)
+
+# caching user setup
 login_manager = LoginManager(app)
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
+# Create Database table befor first url request
 @app.before_first_request
 def create_tables():
     db.create_all()
 
+# caching current user
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# home page
 @app.route("/")
 def home():
     return render_template("home.html")
 
+# otp gender and send mail
 @app.route("/otp_verification")
 def otp_verification():
-    print(current_user.email)
-    current_user.opt=''.join(["{}".format(randint(0, 9)) for num in range(0, 4)])
+    current_user.otp = ''.join(["{}".format(randint(0, 9)) for num in range(0, 4)]) # generat otp and store in database
     db.session.commit()
+
+    # send a OTP as mail
     msg = Message('OTP verification', sender="GUEZZWHU", recipients=[current_user.email])
-    msg.html = render_template("otpgen.html",opt=current_user.opt)
+    msg.html = render_template("otpgen.html",otp=current_user.otp)
     mail.send(msg)
+
     return render_template("otp.html", error=None)
 
+# check OTP
 @app.route("/verify", methods=['POST','GET'])
 def verify():
-    opt = request.form['ccodeBox1']+request.form['ccodeBox2']+request.form['ccodeBox3']+request.form['ccodeBox4']
-    if current_user.opt == opt:
+    # reading otp
+    otp = request.form['ccodeBox1'] + request.form['ccodeBox2'] + request.form['ccodeBox3'] + request.form['ccodeBox4']
+
+    # Checking otp
+    if current_user.otp == otp:
+        # make accout verified
         current_user.verification = 1
         db.session.commit()
+
         return redirect("/profile")
     else:
-        error = "worng opt"
+        error = "worng otp"
         return render_template("otp.html", error=error)
 
+# Login check
 @app.route("/login", methods=['POST', 'GET'])
 def login():
     error = None
@@ -83,6 +110,7 @@ def login():
             error = "username exist"
     return render_template("login.html", form=form, error=error)
 
+# Creat new accout
 @app.route("/sigup", methods=['POST', 'GET'])
 def sigup():
     error = None
@@ -97,7 +125,7 @@ def sigup():
                             email=form.email.data,
                             dob=form.dob.data,
                             verification=0,
-                            opt=''.join(["{}".format(randint(0, 9)) for num in range(0, 4)]),
+                            otp=''.join(["{}".format(randint(0, 9)) for num in range(0, 4)]),
                             )
             db.session.add(new_user)
             db.session.commit()
@@ -107,7 +135,7 @@ def sigup():
             error = "username exist"
     return render_template("sigup.html", form=form, error=error)
 
-
+# Profile
 @app.route("/profile")
 @login_required
 def profile():
@@ -116,6 +144,7 @@ def profile():
     print(link)
     return render_template("profile.html", user=user, link=link)
 
+# create user command link
 @app.route("/create_link/<user_id>")
 @login_required
 def create_link(user_id):
@@ -127,35 +156,47 @@ def create_link(user_id):
     iteam['id'] = link.id
     return jsonify(iteam)
 
+# get user command
 @app.route("/link/<link_id>")
 @login_required
 def link(link_id):
+    link = Link.query.filter_by(id=link_id)
+    if link:
+        # TODO: get command from form
+        cmd = LinkCommand(link_id=link.id,
+                        commander_id=current_user.id,
+                        command=command)
+        db.session.add(cmd)
+        db.session.commit()
+        return redirect("/profile")
     return link_id
 
-
+#logout
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
     return redirect("/")
 
-@app.route("/elements")
-def elements():
-    return render_template("elements.html")
 
-@app.route("/imgtry")
-def imgtry():
-    return render_template("imgtry.html")
+# # does nothing
+# @app.route("/elements")
+# def elements():
+#     return render_template("elements.html")
 
-@app.route("/index")
-def index():
-    return render_template("index.html")
+# @app.route("/imgtry")
+# def imgtry():
+#     return render_template("imgtry.html")
+
+# @app.route("/index")
+# def index():
+#     return render_template("index.html")
 
 
 
-@app.route("/sample")
-def sample():
-    return render_template("sample.html")
+# @app.route("/sample")
+# def sample():
+#     return render_template("sample.html")
 
 
 if __name__ == "__main__":
