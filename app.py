@@ -119,8 +119,12 @@ def profile():
 @app.route("/create_link/<user_id>")
 @login_required
 def create_link(user_id):
+    link = Link(user_id=user_id)
+    db.session.add(link)
+    db.session.commit()
+
     iteam = {}
-    iteam['id'] = user_id
+    iteam['id'] = link.id
     return jsonify(iteam)
 
 @app.route("/link/<link_id>")
