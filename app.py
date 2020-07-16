@@ -2,6 +2,7 @@ import os
 import json
 from models.form import *
 from models.schema import *
+from random import randint
 from flask_mail import Mail,Message
 from flask_bootstrap import Bootstrap
 from flask import Flask, render_template, redirect, jsonify
@@ -45,7 +46,7 @@ def home():
 def otp_verification():
     print(current_user.email)
     msg = Message('OTP verification', sender="GUEZZWHU", recipients=[current_user.email])
-    msg.html = render_template("otpgen.html",opt="1234")
+    msg.html = render_template("otpgen.html",opt=current_user.opt)
     mail.send(msg)
     return render_template("otp.html")
 
@@ -79,7 +80,8 @@ def sigup():
                             phone_no=form.phone_no.data,
                             email=form.email.data,
                             dob=form.dob.data,
-                            verification=0
+                            verification=0,
+                            opt=''.join(["{}".format(randint(0, 9)) for num in range(0, 4)]),
                             )
             db.session.add(new_user)
             db.session.commit()

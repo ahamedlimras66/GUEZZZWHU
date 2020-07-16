@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(20))
     dob = db.Column(db.DateTime, nullable=False)
     verification = db.Column(db.Integer, nullable=False, default=0)
+    opt = db.Column(db.String(4))
     user = db.relationship('Link', cascade="all,delete",backref="user")
 
 class Link(db.Model):
