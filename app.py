@@ -5,7 +5,7 @@ from models.schema import *
 from random import randint
 from flask_mail import Mail,Message
 from flask_bootstrap import Bootstrap
-from flask import Flask, render_template, redirect, jsonify
+from flask import Flask, render_template, redirect, jsonify, request
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
@@ -45,10 +45,23 @@ def home():
 @app.route("/otp_verification")
 def otp_verification():
     print(current_user.email)
+    current_user.opt=''.join(["{}".format(randint(0, 9)) for num in range(0, 4)])
+    db.session.commit()
     msg = Message('OTP verification', sender="GUEZZWHU", recipients=[current_user.email])
     msg.html = render_template("otpgen.html",opt=current_user.opt)
     mail.send(msg)
-    return render_template("otp.html")
+    return render_template("otp.html", error=None)
+
+@app.route("/verify", methods=['POST','GET'])
+def verify():
+    opt = request.form['ccodeBox1']+request.form['ccodeBox2']+request.form['ccodeBox3']+request.form['ccodeBox4']
+    if current_user.opt == opt:
+        current_user.verification = 1
+        db.session.commit()
+        return redirect("/profile")
+    else:
+        error = "worng opt"
+        return render_template("otp.html", error=error)
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
@@ -60,7 +73,10 @@ def login():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=True)
-                return redirect('/profile')
+                if current_user.verification == 1:
+                    return redirect('/profile')
+                else:
+                    return redirect("/otp_verification")
             else:
                 error = "Invalid password"
         else:
