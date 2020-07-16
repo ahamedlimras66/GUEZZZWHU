@@ -17,3 +17,6 @@ class SigupForm(FlaskForm):
 class LoginForm(FlaskForm):
     username = StringField("username",validators=[InputRequired(), Length(max=15, min=4)])
     password = PasswordField("password", validators=[InputRequired(), Length(max=80, min=8)])
+
+class OTPForm(FlaskForm):
+    pass

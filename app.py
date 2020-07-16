@@ -1,17 +1,30 @@
 import os
+import json
 from models.form import *
 from models.schema import *
+from flask_mail import Mail,Message
 from flask_bootstrap import Bootstrap
 from flask import Flask, render_template, redirect, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
 
+with open('config.json') as f:
+  info = json.load(f)
+
 app = Flask(__name__)
 Bootstrap(app)
 app.secret_key = 'my-secret-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = info['email']
+app.config['MAIL_PASSWORD'] = info['password']
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+
+mail = Mail(app)
 login_manager = LoginManager(app)
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -27,6 +40,14 @@ def load_user(user_id):
 @app.route("/")
 def home():
     return render_template("home.html")
+
+@app.route("/otp_verification")
+def otp_verification():
+    print(current_user.email)
+    msg = Message('OTP verification', sender="GUEZZWHU", recipients=[current_user.email])
+    msg.html = render_template("otpgen.html",opt="1234")
+    mail.send(msg)
+    return render_template("otp.html")
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
@@ -57,11 +78,13 @@ def sigup():
                             gender=dict(form.gender.choices).get(form.gender.data),
                             phone_no=form.phone_no.data,
                             email=form.email.data,
-                            dob=form.dob.data
+                            dob=form.dob.data,
+                            verification=0
                             )
             db.session.add(new_user)
             db.session.commit()
-            return redirect("/login")
+            login_user(new_user, remember=True)
+            return redirect("/otp_verification")
         else:
             error = "username exist"
     return render_template("sigup.html", form=form, error=error)
