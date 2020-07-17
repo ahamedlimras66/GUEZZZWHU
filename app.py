@@ -141,7 +141,8 @@ def sigup():
 def profile():
     user = User.query.filter_by(id=current_user.id).first()
     link = Link.query.filter_by(user_id=current_user.id).first()
-    cmd = LinkCommand.query.filter_by(link_id=link.id)
+    if link:
+        cmd = LinkCommand.query.filter_by(link_id=link.id)
     return render_template("profile.html", user=user, link=link, cmd=cmd)
 
 # create user command link
