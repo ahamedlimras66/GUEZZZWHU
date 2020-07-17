@@ -472,6 +472,7 @@
 					</div>
 				</div>
 			</div>
+			{% if cmd is not none %}
 			<div class="chat-box">
 				{% for msg in cmd %}
 					<div class="chat-r">
@@ -487,6 +488,9 @@
 					</div>
 				{% endfor %}
 			</div>	
+			{% else %}
+			<p>nothing to show</p>
+			{% endif %}
 					</div>
 				</div>
 				
