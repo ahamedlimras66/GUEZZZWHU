@@ -157,7 +157,7 @@ def create_link(user_id):
     return jsonify(iteam)
 
 # get user command
-@app.route("/link/<link_id>")
+@app.route("/link/<int:link_id>/")
 @login_required
 def link(link_id):
     link = Link.query.filter_by(id=link_id)
