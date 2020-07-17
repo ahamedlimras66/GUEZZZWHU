@@ -1,6 +1,6 @@
 import os, json
 from random import randint
-
+from datetime import datetime
 from models.form import *
 from models.schema import *
 
@@ -160,8 +160,23 @@ def create_link(user_id):
 @app.route("/link/<int:link_id>/")
 @login_required
 def link(link_id):
-    link = Link.query.filter_by(id=link_id)
-    return render_template("commend.html")
+    link = Link.query.filter_by(id=link_id).first()
+    user = User.query.filter_by(id=link.user_id).first()
+    return render_template("commend.html", user=user, link=link)
+
+@app.route("/save_message", methods=['POST', 'GET'])
+@login_required
+def save_message():
+    message = request.form["cmd"]
+    time = datetime.now()
+
+    cmd = LinkCommand(link_id=1,
+                      commander_id=current_user.id,
+                      date_time=time,
+                      command=message)
+    db.session.add(cmd)
+    db.session.commit()
+    return redirect("/profile")
 
 #logout
 @app.route("/logout")

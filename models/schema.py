@@ -1,4 +1,3 @@
-import datetime
 from db import db
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey
@@ -25,5 +24,5 @@ class LinkCommand(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     link_id = db.Column(db.Integer, ForeignKey('link.id'))
     commander_id = db.Column(db.Integer, ForeignKey('user.id'))
-    date_time = db.Column(db.DateTime)
+    date_time = db.Column(db.DateTime,)
     command =  db.Column(db.String(255))

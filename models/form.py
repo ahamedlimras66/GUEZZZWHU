@@ -1,5 +1,6 @@
 
 from flask_wtf import FlaskForm
+from wtforms.widgets import TextArea
 from wtforms.fields.html5 import TelField, EmailField
 from wtforms import StringField, PasswordField, IntegerField, DateField, SelectField
 from wtforms.validators import InputRequired, Length, Required, EqualTo
@@ -18,5 +19,4 @@ class LoginForm(FlaskForm):
     username = StringField("username",validators=[InputRequired(), Length(max=15, min=4)])
     password = PasswordField("password", validators=[InputRequired(), Length(max=80, min=8)])
 
-class OTPForm(FlaskForm):
-    pass
+
