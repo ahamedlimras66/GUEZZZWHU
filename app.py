@@ -161,15 +161,7 @@ def create_link(user_id):
 @login_required
 def link(link_id):
     link = Link.query.filter_by(id=link_id)
-    if link:
-        # TODO: get command from form
-        cmd = LinkCommand(link_id=link.id,
-                        commander_id=current_user.id,
-                        command=command)
-        db.session.add(cmd)
-        db.session.commit()
-        return redirect("/profile")
-    return link_id
+    return render_template("commend.html")
 
 #logout
 @app.route("/logout")
