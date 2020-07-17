@@ -473,130 +473,20 @@
 				</div>
 			</div>
 			<div class="chat-box">
-				<div class="chat-r">
-					<div class="sp"></div>
-					<div class="mess mess-r">
+				{% for msg in cmd %}
+					<div class="chat-r">
+						<div class="sp"></div>
+						<div class="mess mess-r">
 						<p>
-                            Hi, Elias
+							{{ msg.command }}
 						</p>
 						<div class="check">
-							<span>4:00 PM</span>
-						
+							<span>{{ msg.date_time.strftime("%Y-%m-%d  %H:%M") }}</span>
 						</div>
 					</div>
-				</div>
-				<div class="chat-l">
-					<div class="mess">
-						<p>
-                            Oh! hi 
-						</p>
-						<div class="check">
-							<span>4:00 PM</span>
-						</div>
 					</div>
-					<div class="sp"></div>
-				</div>
-
-				<div class="chat-r">
-					<div class="sp"></div>
-					<div class="mess mess-r">
-						<p>
-                           How are you doing?
-						</p>
-						<div class="check">
-							<span>4:00 PM</span>
-						
-						</div>
-					</div>
-				</div>
-				<div class="chat-l">
-					<div class="mess">
-					    <p>I'm doing alright. How about you?</p>
-						<div class="check">
-							<span>4:00 PM</span>
-						</div>
-					</div>
-					<div class="sp"></div>
-				</div>
-
-				<div class="chat-r">
-					<div class="sp"></div>
-					<div class="mess mess-r">
-						<p>
-                           Not too bad. The weather is great isn't it?
-						</p>
-						<div class="check">
-							<span>4:00 PM</span>
-				
-						</div>
-					</div>
-				</div>
-				<div class="chat-l">
-					<div class="mess">
-						<p>
-                            Yes. It's absolutely beautiful today.
-						</p>
-						<div class="check">
-							<span>4:00 PM</span>
-						</div>
-					</div>
-					<div class="sp"></div>
-				</div>
-
-				<div class="chat-r">
-					<div class="sp"></div>
-					<div class="mess mess-r">
-					<p>vbnm,bscsc</p>
-						<div class="check">
-							<span>4:00 PM</span>
-				
-						</div>
-					</div>
-				</div>
-				<div class="chat-r">
-					<div class="sp"></div>
-					<div class="mess mess-r">
-						<p>I wish it was like this more frequently.</p>
-						<div class="check">
-							<span>4:00 PM</span>
-						
-						</div>
-					</div>
-				</div>
-				<div class="chat-l">
-					<div class="mess">
-						<p>
-                           Me too. 
-						</p>
-						<div class="check">
-							<span>4:00 PM</span>
-						</div>
-					</div>
-					<div class="sp"></div>
-				</div>
-				<div class="chat-r">
-					<div class="sp"></div>
-					<div class="mess mess-r">
-						<p>
-                           So where are you going now?
-						</p>
-						<div class="check">
-							<span>4:00 PM</span>
-						
-						</div>
-					</div>
-				</div>
-			</div>
-
-			
-
-
-					
-						 
-						 
-						 
-						 
-						
+				{% endfor %}
+			</div>	
 					</div>
 				</div>
 				
