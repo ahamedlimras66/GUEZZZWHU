@@ -3,6 +3,11 @@
 ## Running the app
 To get the dependencies
 
+On local installtion
+
+```pip install -r requirement_local```
+
+
 ```pip install -r requirement```
 
 make "config.json" file and type this
