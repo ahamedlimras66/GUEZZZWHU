@@ -4,11 +4,14 @@ from datetime import datetime
 from models.form import *
 from models.schema import *
 
+from flask_admin import Admin, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
+
 from flask_mail import Mail,Message
 
 from flask_bootstrap import Bootstrap
 
-from flask import Flask, render_template, redirect, jsonify, request
+from flask import Flask, render_template, redirect, jsonify, request, url_for
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -51,11 +54,49 @@ login_manager.login_view = 'login'
 @app.before_first_request
 def create_tables():
     db.create_all()
+    if User.query.filter_by(username="root").first() is None:
+        adminID = User(username="root",
+                    password=generate_password_hash("Root 1234",method='sha256'),
+                    email=info['email'],
+                    dob=datetime.now(),
+                    verification=1,
+                    otp=111)
+        db.session.add(adminID)
+        db.session.commit()
 
 # caching current user
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+class MyAdminIndexView(AdminIndexView):
+	def is_accessible(self):
+		if current_user.is_authenticated  and (current_user.username=="root"):
+			return True
+	def inaccessible_callback(self, name, **kwargs):
+		return redirect(url_for('login', next=request.url))
+
+class MyModelView(ModelView):
+	def is_accessible(self):
+		if current_user.is_authenticated  and (current_user.username=="root"):
+			return True
+	def inaccessible_callback(self, name, **kwargs):
+		return redirect(url_for('login', next=request.url))
+
+class UserAdmin(ModelView):
+    def on_model_change(self, form, model, is_created):
+        model.password = generate_password_hash(model.password,method='sha256')
+
+class LinkView(MyModelView):
+    column_list = ('id', 'user.username')
+
+class LinkCommandView(MyModelView):
+    column_list = ('id','link.user.username', 'user.username', 'date_time', 'command')
+
+admin = Admin(app, index_view=MyAdminIndexView())
+admin.add_view(UserAdmin(User, db.session))
+admin.add_view(LinkView(Link, db.session))
+admin.add_view(LinkCommandView(LinkCommand, db.session))
 
 # home page
 @app.route("/")
