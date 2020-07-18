@@ -18,6 +18,9 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 with open('config.json') as f:
   info = json.load(f)
 
+#
+next = ''
+
 # main app
 app = Flask(__name__)
 
@@ -94,20 +97,25 @@ def verify():
 def login():
     error = None
     form = LoginForm()
-
+    global next
+    if request.args.get('next'):
+        next = request.args.get('next')
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=True)
                 if current_user.verification == 1:
-                    return redirect('/profile')
+                    if next:
+                        return redirect(next)
+                    else:
+                        return redirect("/profile")
                 else:
                     return redirect("/otp_verification")
             else:
                 error = "Invalid password"
         else:
-            error = "username exist"
+            error = "username not exist"
     return render_template("login.html", form=form, error=error)
 
 # Creat new accout
@@ -162,6 +170,7 @@ def create_link(user_id):
 @app.route("/link/<int:link_id>/")
 @login_required
 def link(link_id):
+    print(request.referrer)
     link = Link.query.filter_by(id=link_id).first()
     user = User.query.filter_by(id=link.user_id).first()
     return render_template("commend.html", user=user, link=link)
