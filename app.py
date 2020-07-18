@@ -211,10 +211,13 @@ def create_link(user_id):
 @app.route("/link/<int:link_id>/")
 @login_required
 def link(link_id):
-    print(request.referrer)
     link = Link.query.filter_by(id=link_id).first()
-    user = User.query.filter_by(id=link.user_id).first()
-    return render_template("commend.html", user=user, link=link)
+    if link:
+        user = User.query.filter_by(id=link.user_id).first()
+        return render_template("commend.html", user=user, link=link)
+
+    else:
+        return "invalid link"
 
 @app.route("/save_message", methods=['POST', 'GET'])
 @login_required
@@ -222,7 +225,7 @@ def save_message():
     message = request.form["cmd"]
     time = datetime.now()
 
-    cmd = LinkCommand(link_id=1,
+    cmd = LinkCommand(link_id=request.form["id"],
                       commander_id=current_user.id,
                       date_time=time,
                       command=message)
