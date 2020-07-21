@@ -211,6 +211,8 @@ def create_link(user_id):
 @app.route("/link/<int:link_id>/")
 @login_required
 def link(link_id):
+    global next
+    next = None
     link = Link.query.filter_by(id=link_id).first()
     if link:
         user = User.query.filter_by(id=link.user_id).first()
